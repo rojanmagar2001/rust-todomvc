@@ -53,12 +53,13 @@ impl TodoMac {
     }
 
     pub async fn list(db: &Db) -> Result<Vec<Todo>, model::Error> {
-        let sql = "SELECT id, cid, title, status FROM todo ORDER BY id DESC";
+        // let sql = "SELECT id, cid, title, status FROM todo ORDER BY id DESC";
+        let sb = sqlb::select()
+            .table("todo")
+            .columns(&["id", "cid", "title", "status"]);
 
-        // build the sqlx-query
-        let query = sqlx::query_as::<_, Todo>(&sql);
         // execute the query
-        let todos = query.fetch_all(db).await?;
+        let todos = sb.fetch_all(db).await?;
 
         Ok(todos)
     }
